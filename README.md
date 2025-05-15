@@ -1,3 +1,4 @@
+[![Open in Codespaces](https://classroom.github.com/assets/launch-codespace-2972f46106e565e64193e422d61a12cf1da4916b45550586e14ef0a7c637dd04.svg)](https://classroom.github.com/open-in-codespaces?assignment_repo_id=19543558)
 # cpp_tictactoe_tree
 
 // The Minimax function is used to determine the best possible move for the computer in the Tic-Tac-Toe game. It follows a recursive approach to evaluate all possible future states and assign scores based on whether the computer wins (+1), the human wins (-1), or the game ends in a draw (0). The function strategically minimizes the opponent’s best move while maximizing the computer’s chances of winning.
