@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <limits>
+#include <cstdlib> // For rand()
+#include <ctime>   // For seeding rand()
 using namespace std;
 
 const char HUMAN = 'X';
@@ -70,17 +72,18 @@ public:
 
 class TicTacToeTree {
 public:
-    int minimax(const GameState& state, bool isMaximizing) {
+    int minimax(const GameState& state, bool isMaximizing, int depth) {
         char winner = state.checkWinner();
-        if (winner == COMPUTER) return 1;
-        if (winner == HUMAN) return -1;
+        if (winner == COMPUTER) return 10 - depth;
+        if (winner == HUMAN) return depth - 10;
         if (state.isFull()) return 0;
+        if (depth >= 5) return 0; // Depth limit for faster decisions
 
         if (isMaximizing) {
             int bestScore = numeric_limits<int>::min();
             for (int move : state.getAvailableMoves()) {
                 GameState newState = state.makeMove(move, COMPUTER);
-                int score = minimax(newState, false);
+                int score = minimax(newState, false, depth + 1);
                 bestScore = max(bestScore, score);
             }
             return bestScore;
@@ -88,7 +91,7 @@ public:
             int bestScore = numeric_limits<int>::max();
             for (int move : state.getAvailableMoves()) {
                 GameState newState = state.makeMove(move, HUMAN);
-                int score = minimax(newState, true);
+                int score = minimax(newState, true, depth + 1);
                 bestScore = min(bestScore, score);
             }
             return bestScore;
@@ -96,18 +99,25 @@ public:
     }
 
     int findBestMove(const GameState& state) {
+        srand(time(0)); // Seed the random number generator
+
         int bestScore = numeric_limits<int>::min();
-        int bestMove = -1;
+        vector<int> bestMoves;
 
         for (int move : state.getAvailableMoves()) {
             GameState newState = state.makeMove(move, COMPUTER);
-            int score = minimax(newState, false);
+            int score = minimax(newState, false, 0); // Start with depth = 0
+
             if (score > bestScore) {
                 bestScore = score;
-                bestMove = move;
+                bestMoves.clear();
+                bestMoves.push_back(move);
+            } else if (score == bestScore) {
+                bestMoves.push_back(move);
             }
         }
-        return bestMove;
+
+        return bestMoves[rand() % bestMoves.size()]; // Randomly select from best moves
     }
 };
 
